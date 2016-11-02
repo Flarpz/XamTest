@@ -172,7 +172,7 @@ io.sockets.on('connection', (socket) => {
 
       adminsockets.forEach((adminsocket)=>{
         adminsocket.emit('baseStatPack', activeGames.getStatPack());
-      }); 
+      });
   });
 
   //Trigger vibrate event on phone.. WILL NOT WORK FOR MULTIPLE PHONES...
@@ -216,6 +216,11 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('getBaseStatPack', (data)=>{
     socket.emit('baseStatPack', activeGames.getStatPack());
+  });
+
+  //test remove
+  socket.on('sendto', (data)=>{
+    connections[socket.id].emit('sendback', {msg: 'Hello'});
   });
 
 });

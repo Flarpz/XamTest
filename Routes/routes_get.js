@@ -111,6 +111,10 @@ module.exports = {
           res.send(JSON.stringify({ succsess: false }));
         }
 
-      })
+      });
+
+    app.get('/testXama', function(req, res){
+      res.render('pages/testSocket');
+    });
   }
 }
