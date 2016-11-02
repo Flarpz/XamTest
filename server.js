@@ -13,7 +13,8 @@ var Socket = require('socket.io/lib/socket');
 let connections = [];
 let adminsockets = [];
 let activeGames = {};
-
+let allConecctions = [];
+let counter = 0;
 
 //Adding custom stuff to the Socket object..
 Socket.prototype.ping = function(req, res, callback){
@@ -59,6 +60,8 @@ io.sockets.on('connection', (socket) => {
     while (connections[id] != undefined) {
         id = helper.getRandomId5();
     }
+    allConecctions[counter] = socket;
+    counter++;
     socket.id = id;
     connections[socket.id] = socket;
     connections.length++;
@@ -220,7 +223,8 @@ io.sockets.on('connection', (socket) => {
 
   //test remove
   socket.on('sendto', (data)=>{
-    connections[socket.id].emit('sendback', {msg: 'Hello'});
+    for(var i = 0; i<allConecctions.length; i++)
+    allConecctions[i].emit('sendback', {msg: 'Hello'});
   });
 
 });
