@@ -61,6 +61,9 @@ io.sockets.on('connection', (socket) => {
         id = helper.getRandomId5();
     }
     allConecctions[counter] = socket;
+    for(var i = 0; i<allConecctions.length; i++){
+      //console.log(allConecctions[i].id);
+    }
     counter++;
     socket.id = id;
     connections[socket.id] = socket;
@@ -223,8 +226,7 @@ io.sockets.on('connection', (socket) => {
 
   //test remove
   socket.on('sendto', (data)=>{
-    for(var i = 0; i<allConecctions.length; i++)
-    allConecctions[i].emit('sendback', {msg: 'Hello'});
+    socket.broadcast.emit('sendback', {msg: 'Hello'});
   });
 
 });
