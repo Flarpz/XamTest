@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <div>
+      <label id="testSocket" style="text-align: center; font-size: xx-large;">Baaxxxxx</label>
+    </div>
+    <div>
+      <input id="testEmit" type="button" class="btn btn-info" value="TestEmit">
+    </div>
+  </body>
+
+</html>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var socket = io.connect();
+
+  $('#testEmit').click(function(){
+    var data = "hejhje";
+    socket.emit('sendto', {msg: data});
+  });
+  socket.on('sendback', function(data){
+    console.log(data.msg);
+  });
+});
+</script>
