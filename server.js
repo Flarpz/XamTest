@@ -226,6 +226,7 @@ io.sockets.on('connection', (socket) => {
 
   //test remove
   socket.on('sendto', (data)=>{
+    console.log("in sendto event");
     socket.broadcast.emit('sendback', {msg: 'Hello'});
   });
 
