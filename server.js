@@ -243,6 +243,7 @@ io.sockets.on('connection', (socket) => {
     console.log(data.id);
     console.log(data.type);
     phoniroUsers[data] = socket;
+    console.log(phoniroUsers[data]);
     /*;
     if(data.type === 'user' || data.type === "user"){
       phoniroUsers[data.id] = socket;
@@ -265,7 +266,9 @@ io.sockets.on('connection', (socket) => {
   socket.on('setup call', (data)=>{
     console.log('in setup call :' + data.id);
     console.log('in setup call data :' + data);
+    console.log(phoniroUsers[data]);
     if(phoniroUsers[data] != null){
+      console.log(phoniroUsers[data]);
       phoniroUsers[data].emit('call', {msg: 'ringer'});
     }
   });
