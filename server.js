@@ -242,13 +242,13 @@ io.sockets.on('connection', (socket) => {
     console.log(data);
     console.log(data.id);
     console.log(data.type);
-    if(data.type === 'user' data.type === "user"){
+    if(data.type === 'user' && data.type === "user"){
       phoniroUsers[data.id] = socket;
       socket.type = 'user';
       socket.username = data.id;
       console.log('registerd user : ' + data.id);
     }
-    else if(data.type === 'host' data.type === "host"){
+    else if(data.type === 'host' && data.type === "host"){
       phoniroHosts[data.id] = socket;
       socket.type = 'host';
       socket.username = data.id;
