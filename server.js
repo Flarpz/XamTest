@@ -242,6 +242,8 @@ io.sockets.on('connection', (socket) => {
     console.log(data);
     console.log(data.id);
     console.log(data.type);
+    phoniroUsers[data] = socket;
+    /*;
     if(data.type === 'user' || data.type === "user"){
       phoniroUsers[data.id] = socket;
       socket.type = 'user';
@@ -257,6 +259,7 @@ io.sockets.on('connection', (socket) => {
     else{
       console.log('error in register phoniro');
     }
+    */
   });
 
   socket.on('setup call', (data)=>{
