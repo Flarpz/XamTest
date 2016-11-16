@@ -261,7 +261,9 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('setup call', (data)=>{
     console.log('in setup call :' + data.id);
-    phoniroUsers[data.id].emit('call', {msg: 'ringer'});
+    if(phoniroUsers[data.id] != null){
+      phoniroUsers[data.id].emit('call', {msg: 'ringer'});
+    }
   });
 
 });
