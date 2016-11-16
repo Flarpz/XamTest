@@ -14,6 +14,8 @@ let connections = [];
 let adminsockets = [];
 let activeGames = {};
 let allConecctions = [];
+let phoniroUsers = [];
+let phoniroHosts = [];
 let counter = 0;
 
 //Adding custom stuff to the Socket object..
@@ -83,6 +85,12 @@ io.sockets.on('connection', (socket) => {
       }
       else if(socket.type == 'admin'){
         adminsockets.splice(adminsockets.indexOf(socket), 1);
+      }
+      else if(socket.type === 'user'){
+        delete phoniroUsers[socket.username];
+      }
+      else if(socket.type === 'host'){
+        delete phoniroHosts[socket.username];
       }
       else{
           console.log('Error in disconnect' + socket);
@@ -228,6 +236,28 @@ io.sockets.on('connection', (socket) => {
   socket.on('sendto', (data)=>{
     console.log("in sendto event");
     socket.broadcast.emit('sendback', {msg: 'Hello'});
+  });
+
+  socket.on('register phoniro', (data)=>{
+    if(data.type === 'user'){
+      phoniroUsers[data.id] = socket;
+      socket.type = 'user';
+      socket.username = data.id;
+      console.log('registerd user : ' + data.id);
+    }
+    else if(data.type === 'host'){
+      phoniroHosts[data.id] = socket;
+      socket.type = 'host';
+      socket.username = data.id;
+      console.log('registerd host : ' + data.id);
+    }
+    else{
+      console.log('error in register phoniro');
+    }
+  });
+
+  socket.on('setup call', (data)=>{
+    phoniroUsers[data.id].emit('call', {msg: 'ringer'});
   });
 
 });

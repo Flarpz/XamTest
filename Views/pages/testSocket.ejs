@@ -5,10 +5,19 @@
   </head>
   <body>
     <div>
-      <label id="testSocket" style="text-align: center; font-size: xx-large;">Baaxxxxx</label>
+      <label id="testSocket" style="text-align: center; font-size: xx-large;">Test xamarin sockets</label>
     </div>
     <div>
-      <input id="testEmit" type="button" class="btn btn-info" value="TestEmit">
+      <label>Host or User</label>
+      <textarea class="form-control" id="HostOrUser"></textarea>
+      <label>ID</label>
+      <textarea class="form-control" id="ID"></textarea>
+      <label>Who to call</label>
+      <textarea class="form-control" id="receiver"></textarea>
+    </div>
+    <div>
+      <input id="Register" type="button" class="btn btn-info" value="Register">
+      <input id="Call" type="button" class="btn btn-info" value="Call">
     </div>
   </body>
 
@@ -18,10 +27,29 @@
 $(document).ready(function(){
   var socket = io.connect();
 
+  $('#Register').click(function(){
+    var hostOrUser = $('#HostOrUser').val();
+    var ID = $('#ID').val();
+    console.log(hostOrUser);
+    console.log(ID);
+    socket.emit('register phoniro', {type : hostOrUser, id : ID});
+  });
+
+  $('#Call').click(function(){
+    var receiver = $('#receiver').val();
+    socket.emit('setup call', {id: receiver});
+  });
+
+  socket.on('call', (data)=>{
+    console.log(data.msg);
+  });
+
+/*
   $('#testEmit').click(function(){
     var data = "hejhje";
     socket.emit('sendto', {msg: data});
   });
+  */
   socket.on('sendback', function(data){
     console.log(data.msg);
   });
