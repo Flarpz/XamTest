@@ -239,6 +239,7 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('register phoniro', (data)=>{
+    console.log(data);
     if(data.type === 'user'){
       phoniroUsers[data.id] = socket;
       socket.type = 'user';
