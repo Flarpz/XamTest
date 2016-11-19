@@ -35,6 +35,14 @@ module.exports = {
           res.render('pages/stageNew', {data: uniqueId, qr: qrSource, playerLimit: playerLimit});
       });
 
+      app.get('/stageWerewolf', function (req, res) {
+          let uniqueId = helper.getRandomId5();
+          let qrSource = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=[roomId]"
+          let playerLimit = 8;
+          qrSource = qrSource.replace("[roomId]", uniqueId);
+          res.render('pages/stageNew', {data: uniqueId, qr: qrSource, playerLimit: playerLimit});
+      });
+
       app.get('/androidtest', function(req, res){
         let uniqueId = helper.getRandomId5();
         let qrSource = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=[roomId]"
