@@ -88,7 +88,7 @@
             console.log(connectedPlayers);
         }
         if(connectedPlayers == playerLimit){
-
+          socket.emit('gameIsReady');
           //Change the color of the start button..
           $('#startGameButton').addClass('btn-success');
           $('#startGameButton').removeClass('btn-info');
@@ -101,6 +101,7 @@
             setTimeout(function(){
               $('#gFrame').load('/gameframe', function(){
                 $('#loader').css('display', 'none');
+
                   startGame();
                   socket.emit('start game');
               });
@@ -115,13 +116,13 @@
         $('#chat').append(data.nick+' -> '+data.msg + "<br/>");
       });
       socket.on('updateGameState', function(data){
-        updatePositons(data);
+        addToDataBuffer(data);
       });
       socket.on('pingding', function(data){
         socket.emit('ping response');
       });
     });
-
+      //hamp
   </script>
 
 

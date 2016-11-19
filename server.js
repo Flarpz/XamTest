@@ -75,13 +75,26 @@ io.sockets.on('connection', (socket) => {
     //Disconnect
   socket.on('disconnect', (data)=> {
       if(socket.type === 'output'){
+          activeGames[socket.roomId].viewSockets.length--;
           delete activeGames[socket.roomId].viewSockets[socket.id];
           activeGames.numberOfObservers--;
+
+          //If there is no output hooked up to a game the game shold end..
+          if(activeGames[socket.roomId].viewSockets.length == 0){
+            for(var socketid in activeGames[socket.roomId].inputSockets){
+              connections[socketid].emit('quit');
+            }
+            activeGames[socket.roomId].gameState = null;
+            activeGames.numberOfGames--;
+          }
           //generate disconnect event
       }
       else if(socket.type === 'input'){
+          activeGames[socket.roomId].inputSockets.length--;
           delete activeGames[socket.roomId].inputSockets[socket.id];
           activeGames.numberOfPlayers--;
+          //If there are 0 inputSockets to a game, that game should be deleted..
+
       }
       else if(socket.type == 'admin'){
         adminsockets.splice(adminsockets.indexOf(socket), 1);
@@ -95,6 +108,14 @@ io.sockets.on('connection', (socket) => {
       else{
           console.log('Error in disconnect' + socket);
       }
+      //Preform total delete if there is noone left..
+      if(activeGames[socket.roomId] != null){
+        if(activeGames[socket.roomId].inputSockets.length === 0 &&
+           activeGames[socket.roomId].viewSockets.length === 0){
+           delete activeGames[socket.roomId];
+         }
+      }
+
 
       adminsockets.forEach((socket)=>{
         socket.emit('baseStatPack', activeGames.getStatPack())
@@ -140,11 +161,15 @@ io.sockets.on('connection', (socket) => {
           activeGames.numberOfGames++;
           activeGames.numberOfObservers++;
 
+          game.viewSockets.length++;
+
+
         }
         else {
           socket.roomId = data.id;
           socket.type = 'output';
           activeGames[data.id].viewSockets[socket.id] = socket.id;
+          activeGames[data.id].viewSockets.length++;
           activeGames.numberOfObservers++;
           console.log('Connected new observer socket!');
         }
@@ -160,9 +185,12 @@ io.sockets.on('connection', (socket) => {
           }
           else {
               activeGames[data.id].inputSockets[socket.id] = socket.id;
+              activeGames[data.id].inputSockets.length++;
               socket.roomId = data.id;
               socket.type = 'input';
-              socket.player = activeGames[data.id].gameState.getNextPlayerNumber();
+              socket.player = activeGames[data.id].gameState.getNextPlayerNumber(socket.id);
+
+
 
               for(var viewSocketId in activeGames[data.id].viewSockets){
                   connections[viewSocketId].emit('new player connected', data);
@@ -180,6 +208,7 @@ io.sockets.on('connection', (socket) => {
           }
       }
       else if(data.type === 'admin'){
+        socket.type = data.type;
         adminsockets.push(socket);
         socket.emit('baseStatPack', activeGames.getStatPack())
       };
@@ -191,9 +220,9 @@ io.sockets.on('connection', (socket) => {
 
   //Trigger vibrate event on phone.. WILL NOT WORK FOR MULTIPLE PHONES...
   socket.on('feedback', (data)=>{
-    for(let socketId in activeGames[socket.roomId].inputSockets){
-      connections[socketId].emit('move received', data);
-    }
+      for(let socketId in activeGames[socket.roomId].inputSockets){
+        connections[socketId].emit('move received', data);
+      }
   });
 
   //Disconnect input
@@ -232,10 +261,11 @@ io.sockets.on('connection', (socket) => {
     socket.emit('baseStatPack', activeGames.getStatPack());
   });
 
-  //test remove
-  socket.on('sendto', (data)=>{
-    console.log("in sendto event");
-    socket.broadcast.emit('sendback', {msg: 'Hello'});
+  socket.on('gameIsReady', (data) =>{
+    for(let socketid in activeGames[socket.roomId].inputSockets){
+      console.log('sending a game is ready');
+      connections[socketid].emit('game is ready');
+    }
   });
 
   socket.on('register phoniro', (data)=>{

@@ -4,14 +4,18 @@ var p1Changed = false;
 var player2Score = 2;
 var p2Changed = false;
 
+var dataBuffer = [];
+
 var previouseTestupdateFreq = 0;
 var testUpdateFreq = 0
 var firstrun = true;
 
 var imageBall = new Image();
 imageBall.src = '/Images/ball.png';
-var imagePad = new Image();
-imagePad.src = '/Images/pad.png';
+var imageRedPad = new Image();
+imageRedPad.src = '/Images/redpad.png';
+var imageBluePad = new Image();
+imageBluePad.src = '/Images/bluepad.png';
 
 var requestAnimationFrame =
           window.requestAnimationFrame       ||
@@ -23,13 +27,13 @@ function startGame() {
     myBackgroundArea.start();
     myGameArea.start();
     myGameArea.clear();
-    PlayerOneRed = new component(30, 130, "black", 20, 200, imagePad);
-    PlayerTwoBlue = new component(30, 130, "black", 940, 200, imagePad);
+    PlayerOneRed = new component(30, 130, "black", 20, 200, imageRedPad);
+    PlayerTwoBlue = new component(30, 130, "black", 940, 200, imageBluePad);
     TheBall = new component(20,20, 'black', 480, 230, imageBall);
     TheBall.speedX = 2;
-    Top = new component(1000, 5, "black", 0, 0);
-    Bottom = new component(1000, 5, "black", 0, 495);
-    Middle = new component(6, 25, "black", 497, 0);
+    Top = new component(1000, 5, "white", 0, 0);
+    Bottom = new component(1000, 5, "white", 0, 495);
+    Middle = new component(6, 25, "white", 497, 0);
     setUpGameScreen();
     drawGameArea();
     //var increaseGameSpeed = setInterval(myTimer, 10000);
@@ -39,13 +43,25 @@ function setUpGameScreen(){
   myBackgroundArea.clear();
   myGameArea.clear();
   ctx = myBackgroundArea.context;
+  ctx.fillStyle = "black";
   ctx.fillRect(0, 0, 1000, 5); // Top
   ctx.fillRect(0, 495, 1000, 5); // Bottom
   ctx.fillRect(497, 0, 6, 500);
+
+  ctx = myGameArea.context;
+  PlayerOneRed.updateImage();
+  PlayerTwoBlue.updateImage();
+}
+
+function addToDataBuffer(data){
+  dataBuffer.push(data);
+}
+
+function getDataFromBuffer(){
+    return dataBuffer.splice(0, 1);
 }
 
 function updatePositons(data){
-
   if(data.timeStamp > lastPackage){
     PlayerOneRed.nextX = data.p1.x;
     PlayerOneRed.nextY = data.p1.y;
@@ -145,6 +161,12 @@ function component(width, height, color, x, y, img) {
     }
     this.updateImage = function(){
         ctx = myGameArea.context;
+        /*
+        ctx.shadowColor = '#999';
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetX = 15;
+        ctx.shadowOffsetY = 15;
+        */
         ctx.drawImage(this.sprite, this.x, this.y, this.width, this.height);
     }
 }
@@ -188,22 +210,36 @@ function updateGameArea() {
 
   function drawGameArea(){
     testUpdate();
-    // If pads are moving clearrect and repaint
-    if(PlayerOneRed.nextX != PlayerOneRed.x || PlayerOneRed.nextY != PlayerOneRed.y){
-      PlayerOneRed.clearObj();
-      updateNewXandY(PlayerOneRed);
+
+/* Testat databuffert för inkonmmande data .... buggigt
+    var newPosFromBuffer = getDataFromBuffer();
+    //console.log(newPosFromBuffer);
+    if(newPosFromBuffer != null){
+      updatePositons(newPosFromBuffer);
     }
-    if(PlayerTwoBlue.nextX != PlayerTwoBlue.x || PlayerTwoBlue.nextY != PlayerTwoBlue.y){
-      PlayerTwoBlue.clearObj()
-      updateNewXandY(PlayerTwoBlue);
-    }
+*/
     // clearCircle and update new x and y
     TheBall.clearCircle();
     updateNewXandY(TheBall);
 
     TheBall.updateImage();
-    PlayerOneRed.updateImage();
-    PlayerTwoBlue.updateImage();
+
+    // If pads are moving clearrect and repaint
+    if(PlayerOneRed.nextX != PlayerOneRed.x || PlayerOneRed.nextY != PlayerOneRed.y || PlayerOneRed.collide){
+      PlayerOneRed.clearObj();
+      PlayerOneRed.collide = false;
+      updateNewXandY(PlayerOneRed);
+      PlayerOneRed.updateImage();
+      console.log("repaint red");
+    }
+    if(PlayerTwoBlue.nextX != PlayerTwoBlue.x || PlayerTwoBlue.nextY != PlayerTwoBlue.y || PlayerTwoBlue.collide){
+      PlayerTwoBlue.clearObj()
+      PlayerTwoBlue.collide = false;
+      updateNewXandY(PlayerTwoBlue);
+      PlayerTwoBlue.updateImage();
+      console.log("repaint blue");
+    }
+
     requestAnimationFrame(drawGameArea);
   }
 
