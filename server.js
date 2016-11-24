@@ -272,7 +272,7 @@ io.sockets.on('connection', (socket) => {
     }
     else if(phoniroUsers[data.id] != null){
       console.log(phoniroUsers[data.id]);
-      phoniroUsers[data].emit('call', {msg: 'ringer'});
+      phoniroUsers[data.id].emit('call', {msg: 'ringer'});
     }
   });
 
