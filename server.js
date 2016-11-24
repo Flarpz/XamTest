@@ -241,13 +241,13 @@ io.sockets.on('connection', (socket) => {
   socket.on('register phoniro', (data)=>{
     console.log('register phonieo : ' + data);
     phoniroUsers[data] = socket;
-    socket.emit('registerd' {msg: 'reg'});
+    phoniroUsers[data].emit('registerd', {msg: 'reg'});
     //console.log(phoniroUsers[data]);
     /*;
     if(data.type === 'user' || data.type === "user"){
       phoniroUsers[data.id] = socket;
       socket.type = 'user';
-      socket.username = data.id;
+      socket.username = data.id;s
       console.log('registerd user : ' + data.id);
     }
     else if(data.type === 'host' || data.type === "host"){
