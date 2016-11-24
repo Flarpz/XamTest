@@ -32,13 +32,13 @@ $(document).ready(function(){
     var ID = $('#ID').val();
     console.log(hostOrUser);
     console.log(ID);
-    socket.emit('register phoniro', {type : hostOrUser, id : ID});
+    socket.emit('register phoniro', ID);
   });
 
   $('#Call').click(function(){
     var receiver = $('#receiver').val();
     console.log(receiver);
-    socket.emit('setup call', {receiver});
+    socket.emit('setup call', receiver);
   });
 
   socket.on('call', (data)=>{
