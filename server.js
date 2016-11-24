@@ -270,6 +270,10 @@ io.sockets.on('connection', (socket) => {
       console.log(phoniroUsers[data]);
       phoniroUsers[data].emit('call', {msg: 'ringer'});
     }
+    else if(phoniroUsers[data.id] != null){
+      console.log(phoniroUsers[data.id]);
+      phoniroUsers[data].emit('call', {msg: 'ringer'});
+    }
   });
 
 });
