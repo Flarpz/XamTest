@@ -239,9 +239,7 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('register phoniro', (data)=>{
-    console.log(data);
-    console.log(data.id);
-    console.log(data.type);
+    console.log('register phonieo : ' + data);
     phoniroUsers[data] = socket;
     console.log(phoniroUsers[data]);
     /*;
