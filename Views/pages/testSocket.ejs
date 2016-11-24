@@ -37,6 +37,7 @@ $(document).ready(function(){
 
   $('#Call').click(function(){
     var receiver = $('#receiver').val();
+    console.log(receiver);
     socket.emit('setup call', {id: receiver});
   });
 
