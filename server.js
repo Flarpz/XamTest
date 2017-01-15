@@ -69,9 +69,10 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('register phoniro', (data)=>{
-    console.log('register phonieo : ' + data);
+    console.log('register phoniro : ' + data);
     phoniroUsers[data] = socket;
     phoniroUsers[data].emit('registerd', {msg: 'reg'});
+    console.log(phoniroUsers[data]);
     //console.log(phoniroUsers[data]);
     /*;
     if(data.type === 'user' || data.type === "user"){
