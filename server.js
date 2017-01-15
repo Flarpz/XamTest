@@ -101,10 +101,10 @@ io.sockets.on('connection', (socket) => {
       console.log("1");
       phoniroUsers[data].emit('call', {msg: 'ringer'});
     }
-    if(phoniroUsers[data] != null){
+    if(phoniroUsers[temp] != null){
       //console.log(phoniroUsers[data.id]);
       console.log("2");
-      phoniroUsers[data.id].emit('call', {msg: 'ringer'});
+      phoniroUsers[temp].emit('call', {msg: 'ringer'});
     }
   });
 
