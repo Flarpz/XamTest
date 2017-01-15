@@ -95,16 +95,15 @@ io.sockets.on('connection', (socket) => {
   socket.on('setup call', (data)=>{
     console.log('in setup call :' + data.id);
     console.log('in setup call data :' + data);
-    var temp = data.slice(1, data.length);
     if(phoniroUsers[data] != null){
       //console.log(phoniroUsers[data]);
       console.log("1");
       phoniroUsers[data].emit('call', {msg: 'ringer'});
     }
-    if(phoniroUsers[temp] != null){
+    if(phoniroUsers[data.id] != null){
       //console.log(phoniroUsers[data.id]);
       console.log("2");
-      phoniroUsers[temp].emit('call', {msg: 'ringer'});
+      phoniroUsers[data.id].emit('call', {msg: 'ringer'});
     }
   });
 
