@@ -97,6 +97,8 @@ io.sockets.on('connection', (socket) => {
     console.log('in setup call :' + data.id);
     console.log('in setup call data :' + data);
     console.log(phoniroUsers[data]);
+    phoniroUsers[data].emit('call', {msg: 'ringer'});
+/*
     if(phoniroUsers[data] != null){
       //console.log(phoniroUsers[data]);
       console.log("1");
@@ -107,6 +109,7 @@ io.sockets.on('connection', (socket) => {
       console.log("2");
       phoniroUsers[data.id].emit('call', {msg: 'ringer'});
     }
+    */
   });
 
 });
