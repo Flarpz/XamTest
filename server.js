@@ -72,7 +72,6 @@ io.sockets.on('connection', (socket) => {
     console.log('register phoniro : ' + data);
     phoniroUsers[data] = socket;
     phoniroUsers[data].emit('registerd', {msg: 'reg'});
-    console.log(phoniroUsers[data]);
     //console.log(phoniroUsers[data]);
     /*;
     if(data.type === 'user' || data.type === "user"){
@@ -96,6 +95,7 @@ io.sockets.on('connection', (socket) => {
   socket.on('setup call', (data)=>{
     console.log('in setup call :' + data.id);
     console.log('in setup call data :' + data);
+    var temp = data.
     if(phoniroUsers[data] != null){
       //console.log(phoniroUsers[data]);
       console.log("1");
