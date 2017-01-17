@@ -28,35 +28,19 @@ console.log('Server running..');
 console.log('Listening on: ' + process.env.PORT);
 
 
-
 //Socket events..
 io.sockets.on('connection', (socket) => {
-    let id = helper.getRandomId5();
-    while (connections[id] != undefined) {
-        id = helper.getRandomId5();
-    }
-
-    counter++;
-    socket.id = id;
-    connections[socket.id] = socket;
     connections.length++;
     console.log('Connected: %s sockets connected', connections.length);
 
     //Disconnect
   socket.on('disconnect', (data)=> {
-
-
-      if(socket.type === 'user'){
-        delete phoniroUsers[socket.username];
-      }
-      else if(socket.type === 'host'){
-        delete phoniroHosts[socket.username];
+      if(phoniroUsers[socket.id] != null){
+        delete phoniroUsers[socket.id];
       }
       else{
           console.log('Error in disconnect' + socket);
       }
-
-      delete connections[socket.id];
       connections.length--;
       console.log('Disconnected: %s sockets connected', connections.length);
   });
@@ -68,30 +52,15 @@ io.sockets.on('connection', (socket) => {
     socket.broadcast.emit('sendback', {msg: 'Hello'});
   });
 
+// register phoniro clients
   socket.on('register phoniro', (data)=>{
     console.log('register phoniro : ' + data);
+    socket.id = data;
     phoniroUsers[data] = socket;
     phoniroUsers[data].emit('registerd', {msg: 'reg'});
-    //console.log(phoniroUsers[data]);
-    /*;
-    if(data.type === 'user' || data.type === "user"){
-      phoniroUsers[data.id] = socket;
-      socket.type = 'user';
-      socket.username = data.id;s
-      console.log('registerd user : ' + data.id);
-    }
-    else if(data.type === 'host' || data.type === "host"){
-      phoniroHosts[data.id] = socket;
-      socket.type = 'host';
-      socket.username = data.id;
-      console.log('registerd host : ' + data.id);
-    }
-    else{
-      console.log('error in register phoniro');
-    }
-    */
   });
 
+// setup call.
   socket.on('setup call', (data)=>{
     console.log('in setup call :' + data.id);
     console.log('in setup call data :' + data);
